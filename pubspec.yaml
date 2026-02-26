@@ -1,0 +1,67 @@
+name: liciouss
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  supabase_flutter: ^2.12.0
+  shared_preferences: ^2.5.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/Licious.jpg"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/licious_icon.jpg
+    - assets/images/Licious.jpg
+    - assets/images/pngtree-food-logo-png-image_5687686.png
+    - assets/images/Logo.jpg
+    - assets/images/black-bar-be-cue-food-banner-template-9ffhfd5e8ddb36.webp
+    - assets/images/restaurant-promotion-background-mexican-food-260nw-2497579947.webp
+    - assets/images/20c81e0c-377d-410d-b152-41bddb7bbf2a.webp
+    - assets/images/food-delivery-logo-template-vector-icon-illustration-170869600.webp
+    - assets/images/CHICKEN1.jpg
+    - assets/images/MUTTON.jpg
+    - assets/images/muttonCate.png
+    - assets/images/seawaterfish.png
+    - assets/images/freshwaterfish.png
+    - assets/images/eggscate.webp
+    - assets/images/crispy.png
+    - assets/images/FISH.jpg
+    - assets/images/readytocook.png
+    - assets/images/prawns.png
+    - assets/images/coldCuts.png
+    - assets/images/masala.webp
+    - assets/images/liver.webp
+    - assets/images/combos.png
+    - assets/images/sausages.png
+    - assets/images/frankfurter.png
+    - assets/images/ChickenCurryCut.png
+    - assets/images/boneless.png
+    - assets/images/speialityCuts.png
+    - assets/images/livercombos.png
+    - assets/images/MuttonCurryCut.png
+    - assets/images/MuttonBoneless.png
+    - assets/images/Muttonspeciality.png
+    - assets/images/MuttonLiver.webp
+    - assets/images/fish_Icon.png
+    - assets/images/mutton_icon.png
+    - assets/images/chicken_icon.png
