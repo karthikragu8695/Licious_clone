@@ -19,12 +19,14 @@ class CartItem {
   final String name;
   final double price;
   int quantity;
+  final String? image;
 
   CartItem({
     required this.id,
     required this.name,
     required this.price,
     this.quantity = 1,
+    required this.image
   });
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class CartItem {
       name: json['name'],
       price: json['price'],
       quantity: json['quantity'],
+      image: json['image'] ?? "assets/images/masala.webp",
     );
   }
 
@@ -42,6 +45,7 @@ class CartItem {
       'name': name,
       'price': price,
       'quantity': quantity,
+      'image':image,
     };
   }
 }

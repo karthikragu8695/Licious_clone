@@ -1,10 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:liciouss/card/addToCart.dart';
 import 'package:liciouss/card/product_card.dart';
-import 'package:liciouss/datas/cart_items.dart';
-import 'package:liciouss/models/product_structure.dart';
 import 'package:liciouss/screens/cart_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +19,12 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContentState extends State<HomeContent> {
   int cartCount = 0;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    calculateCartCount(); // 🔥 Always refresh when screen visible
+  }
+
   @override
   void initState() {
     super.initState();
@@ -50,23 +53,23 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   /// 🔹 Calculate total cart count from SharedPreferences
- Future<void> calculateCartCount() async {
-  final prefs = await SharedPreferences.getInstance();
-  List<String> cartList = prefs.getStringList('cart') ?? [];
+  Future<void> calculateCartCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> cartList = prefs.getStringList('cart') ?? [];
 
-  int total = 0;
+    int total = 0;
 
-  for (var item in cartList) {
-    final decoded = jsonDecode(item);
-    total += decoded['quantity'] as int;
+    for (var item in cartList) {
+      final decoded = jsonDecode(item);
+      total += decoded['quantity'] as int;
+    }
+
+    if (mounted) {
+      setState(() {
+        cartCount = total;
+      });
+    }
   }
-
-  if (mounted) {
-    setState(() {
-      cartCount = total;
-    });
-  }
-}
 
   /// 🔹 Update delivery time
   void updateDeliveryInfo(String location) {
@@ -158,7 +161,10 @@ class _HomeContentState extends State<HomeContent> {
                       ),
                     ),
                     Text(deliveryTime, style: const TextStyle(fontSize: 12)),
-                    ElevatedButton(onPressed: clearCart, child: Text('data')),
+                    // ElevatedButton(
+                    //   onPressed: didChangeDependencies,
+                    //   child: Text('data'),
+                    // ),
                   ],
                 ),
               ),
@@ -207,14 +213,14 @@ class _HomeContentState extends State<HomeContent> {
                           },
                           // count: 0, // basic
                           onAdd: () {
-                            addToCart(
-                              CartItem(
-                                id: product.id,
-                                name: product.name,
-                                price: product.price,
-                                quantity: 1,
-                              ),
-                            );
+                            // addToCart(
+                            //   CartItem(
+                            //     id: product.id,
+                            //     name: product.name,
+                            //     price: product.price,
+                            //     quantity: 1,
+                            //   ),
+                            // );
                             calculateCartCount();
                           },
                           onRemove: () {
@@ -245,7 +251,7 @@ class _HomeContentState extends State<HomeContent> {
                 ),
               ),
 
-              const CategoryWidget(),
+              CategoryWidget(onCartUpdated: calculateCartCount),
 
               const SizedBox(height: 80),
             ],
@@ -276,15 +282,13 @@ class _HomeContentState extends State<HomeContent> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => CartPage(),
-                          ),
+                          MaterialPageRoute(builder: (_) => CartPage()),
                         ).then((_) {
-                          calculateCartCount(); // 🔥 refresh when coming back
+                          calculateCartCount();
+                          setState(() {}); // 🔥 Force rebuild all ProductCards
                         });
                         print("Cart item:$calculateCartCount()");
                       },
-                      
 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,

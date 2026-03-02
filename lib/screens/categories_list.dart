@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../datas/product_data.dart';
 import '../card/product_card.dart';
 
-class CategoriesList extends StatelessWidget {
+class CategoriesList extends StatefulWidget {
   final String categoryKey;
   final String title;
 
@@ -13,20 +16,51 @@ class CategoriesList extends StatelessWidget {
   });
 
   @override
+  State<CategoriesList> createState() => _CategoriesListState();
+}
+
+class _CategoriesListState extends State<CategoriesList> {
+  int cartCount = 0;
+  @override
+  void initState() {
+    super.initState();
+    calculateCartCount(); // Only this is enough
+  }
+  Future<void> calculateCartCount() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> cartList = prefs.getStringList('cart') ?? [];
+
+    int total = 0;
+
+    for (var item in cartList) {
+      final decoded = jsonDecode(item);
+      total += decoded['quantity'] as int;
+    }
+
+    if (mounted) {
+      setState(() {
+        cartCount = total;
+      });
+    }
+  }
+  @override
   Widget build(BuildContext context) {
+    
     final filteredProducts = productList
-        .where((p) => p.category == categoryKey)
-        .toList();
+    .where((p) =>
+        p.category.toLowerCase().trim() ==
+        widget.categoryKey.toLowerCase().trim())
+    .toList();
 
     print("📦 Products found: ${filteredProducts.length}");
-    print("Category Key received: $categoryKey");
+    print("Category Key received: ${widget.categoryKey}");
 
     for (var p in productList) {
       print("Product: ${p.name} | Category: ${p.category}");
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(title: Text(widget.title)),
       body: filteredProducts.isEmpty
           ? const Center(
               child: Text("No products found", style: TextStyle(fontSize: 16)),
@@ -43,8 +77,12 @@ class CategoriesList extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ProductCard(
                   product: filteredProducts[index],
-                  onAdd: () {},
-                  onRemove: () {},
+                  onAdd: () {
+                    calculateCartCount();
+                  },
+                  onRemove: () {
+                    calculateCartCount();
+                  },
                 );
               },
             ),

@@ -1,19 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../models/product_structure.dart';
 import '../datas/cart_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPage extends StatefulWidget {
-
-   CartPage({super.key,});
+  const CartPage({super.key});
 
   @override
   State<CartPage> createState() => _CartPageState();
 }
 
 class _CartPageState extends State<CartPage> {
-
   List<CartItem> cartItems = [];
 
   int deliveryFee = 39;
@@ -38,8 +35,6 @@ class _CartPageState extends State<CartPage> {
     });
     print("CartItems Loaded: ${cartItems.length}");
   }
-
-  
 
   /// 🔹 Save updated cart
   Future<void> saveCart() async {
@@ -132,6 +127,14 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 Row(
                                   children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: Image.asset(
+                                        item.image ??
+                                            "assets/images/masala.webp",
+                                      ),
+                                    ),
                                     const Icon(
                                       Icons.shopping_cart,
                                       color: Colors.red,

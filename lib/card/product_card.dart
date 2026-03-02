@@ -43,7 +43,11 @@ class _ProductCardState extends State<ProductCard> {
 
   //   print("🛒 product Cart Count: $count");
   // }
-
+@override
+void didUpdateWidget(covariant ProductCard oldWidget) {
+  super.didUpdateWidget(oldWidget);
+  loadCount(); // 🔥 Refresh when parent rebuilds
+}
   @override
   void initState() {
     super.initState();
@@ -99,7 +103,7 @@ class _ProductCardState extends State<ProductCard> {
         'id': widget.product.id,
         'name': widget.product.name,
         'price': widget.product.price,
-        'quantity': 0,
+        'quantity': 1,
       });
       count = 1;
     }

@@ -1,9 +1,21 @@
+
 import 'package:flutter/material.dart';
 import 'package:liciouss/screens/categories_list.dart';
 import '../models/category_structure.dart';
 
-class CategoryWidget extends StatelessWidget {
-  const CategoryWidget({super.key});
+class CategoryWidget extends StatefulWidget {
+  final VoidCallback onCartUpdated;
+  const CategoryWidget({super.key, required this.onCartUpdated});
+
+  @override
+  State<CategoryWidget> createState() => _CategoryWidgetState();
+}
+
+class _CategoryWidgetState extends State<CategoryWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +44,19 @@ class CategoryWidget extends StatelessWidget {
                   title: category.title,
                 ),
               ),
-            );
+            ).then((_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CategoriesList(
+                    categoryKey: category.key,
+                    title: category.title,
+                  ),
+                ),
+              ).then((_) {
+                widget.onCartUpdated(); // 🔥 refresh Home
+              });
+            });
           },
           child: Column(
             children: [
