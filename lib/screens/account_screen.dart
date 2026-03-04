@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:liciouss/DetailScreen/account_edit.dart';
 import 'package:liciouss/login/Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
-  const AccountScreen({super.key});
+  AccountScreen({super.key});
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  String name = "New User";
+  String name = '';
   String phone = "";
 
   @override
@@ -22,8 +23,8 @@ class _AccountScreenState extends State<AccountScreen> {
   Future<void> loadUser() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = prefs.getString('phone_number') ?? "New User";
-      phone = prefs.getString('phone_number') ?? "";
+      phone = prefs.getString('phone') ?? "";
+      name = prefs.getString('name') ?? "Guest";
     });
   }
 
@@ -50,8 +51,10 @@ class _AccountScreenState extends State<AccountScreen> {
             children: [
               Text(
                 'Hi $name',
-                style:
-                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 6),
               Row(
@@ -61,11 +64,27 @@ class _AccountScreenState extends State<AccountScreen> {
                     style: const TextStyle(color: Colors.grey),
                   ),
                   const Spacer(),
-                  const Text(
-                    "Edit",
-                    style: TextStyle(
-                        color: Color(0XFFD32F2F), fontWeight: FontWeight.w600),
-                  )
+                  TextButton(
+                    
+                    onPressed: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AccountEditScreen(),
+                        ),
+                      );
+
+                      loadUser(); // 🔥 Back vandha udane refresh
+                    },
+                    child: Text(
+                      "Edit",
+                      style: TextStyle(
+                        color: Color(0XFFD32F2F),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16
+                      ),
+                    ),
+                  ),
                 ],
               ),
 
@@ -90,8 +109,11 @@ class _AccountScreenState extends State<AccountScreen> {
                     Spacer(),
                     Text('Explore', style: TextStyle(color: Color(0xffead942))),
                     SizedBox(width: 8),
-                    Icon(Icons.arrow_forward_ios,
-                        color: Colors.white, size: 16),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ],
                 ),
               ),
@@ -103,23 +125,25 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     const Divider(),
                     const AccountItem(
-                        icon: Icons.shopping_bag_outlined,
-                        title: "Orders",
-                        subtitle: "Order Placed : 0"),
+                      icon: Icons.shopping_bag_outlined,
+                      title: "Orders",
+                      subtitle: "Order Placed : 0",
+                    ),
                     const Divider(),
 
                     const AccountItem(
-                        icon: Icons.credit_card_outlined,
-                        title: "Payment Methods",
-                        subtitle: "Saved cards & UPI IDs"),
+                      icon: Icons.credit_card_outlined,
+                      title: "Payment Methods",
+                      subtitle: "Saved cards & UPI IDs",
+                    ),
                     const Divider(),
 
                     const AccountItem(
-                        icon: Icons.location_on_outlined,
-                        title: "Address",
-                        subtitle: "No Saved Address"),
+                      icon: Icons.location_on_outlined,
+                      title: "Address",
+                      subtitle: "No Saved Address",
+                    ),
                     const Divider(),
-                    
 
                     const SizedBox(height: 10),
 
@@ -129,7 +153,9 @@ class _AccountScreenState extends State<AccountScreen> {
                       title: const Text(
                         "Logout",
                         style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.w600),
+                          color: Colors.red,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       onTap: logout,
                     ),

@@ -3,7 +3,7 @@ import 'package:liciouss/screens/categories_list.dart';
 import '../models/category_structure.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  CategoriesScreen({super.key});
+  const CategoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -22,6 +22,7 @@ List<int> counts = stringList != null
 
     if (data['id'] == item.id) {
       data['quantity'] = (data['quantity'] ?? 0) + 1;
+      data['image'] = (data['image'] ?? 'aassets/images/defalut_image.png') ;
       cartList[i] = jsonEncode(data);
       isExist = true;
       break;

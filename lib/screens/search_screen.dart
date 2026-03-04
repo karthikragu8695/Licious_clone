@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:liciouss/models/category_structure.dart';
+import 'package:liciouss/screens/categories_list.dart';
 import 'package:liciouss/screens/home_Screen.dart';
+import 'package:liciouss/screens/home_content.dart';
 
 class SearchScreen extends StatefulWidget {
   final Function(String)? onProductSelected;
@@ -13,17 +16,16 @@ class _SearchScreenState extends State<SearchScreen> {
   final FocusNode _focusNode = FocusNode();
   final TextEditingController _controller = TextEditingController();
 
-  final List<String> allProducts = [
-    "All",
-    "Chicken",
-    "Chicken Breast",
-    "Mutton",
-    "Fish",
-    "Prawns",
-    "Cold Cuts",
-  ];
-
-  List<String> filtered = [];
+  // final List<String> allProducts = [
+  //   "All",
+  //   "Chicken",
+  //   "Chicken Breast",
+  //   "Mutton",
+  //   "Fish",
+  //   "Prawns",
+  //   "Cold Cuts",
+  // ];
+  final List<Category> allProducts = categories;
 
   @override
   void initState() {
@@ -34,13 +36,17 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+  List<Category> filtered = [];
+
   void onSearch(String value) {
     setState(() {
       if (value.isEmpty) {
-        filtered = allProducts;
+        filtered = categories;
       } else {
-        filtered = allProducts
-            .where((e) => e.toLowerCase().contains(value.toLowerCase()))
+        filtered = categories
+            .where(
+              (cat) => cat.title.toLowerCase().contains(value.toLowerCase()),
+            )
             .toList();
       }
     });
@@ -100,20 +106,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: Wrap(
                   spacing: 12,
                   runSpacing: 12,
-                  children: filtered.map((item) {
+                  children: filtered.map((cat) {
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => HomeContent()
+                            builder: (context) => CategoriesList(
+                              categoryKey: cat.key,
+                              title: cat.title,
+                            ),
                           ),
                         );
                       },
-                      child: Chip(
-                        label: Text(item),
-                        avatar: const Icon(Icons.search, size: 16),
-                      ),
+                      child: Chip(label: Text(cat.title)),
                     );
                   }).toList(),
                 ),

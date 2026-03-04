@@ -171,7 +171,7 @@ class _HomeContentState extends State<HomeContent> {
 
               const SizedBox(height: 12),
 
-              const offerBanner(),
+              const OfferBanner(),
 
               const SizedBox(height: 12),
 

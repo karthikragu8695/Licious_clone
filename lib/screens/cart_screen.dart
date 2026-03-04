@@ -33,7 +33,6 @@ class _CartPageState extends State<CartPage> {
           .map((e) => CartItem.fromJson(jsonDecode(e)))
           .toList();
     });
-    print("CartItems Loaded: ${cartItems.length}");
   }
 
   /// 🔹 Save updated cart
@@ -42,15 +41,13 @@ class _CartPageState extends State<CartPage> {
     List<String> updatedList = cartItems
         .map((item) => jsonEncode(item.toJson()))
         .toList();
-    await prefs.setStringList('cart', updatedList);
 
+    await prefs.setStringList('cart', updatedList);
     setState(() {});
-    print(updatedList);
   }
 
   /// 🔹 Increase Quantity
-  void increaseQty(int index) async {
-    final prefs = await SharedPreferences.getInstance();
+  void increaseQty(int index) {
     setState(() {
       cartItems[index].quantity++;
     });
@@ -66,7 +63,6 @@ class _CartPageState extends State<CartPage> {
         cartItems.removeAt(index);
       }
     });
-
     saveCart();
   }
 
@@ -86,68 +82,113 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Cart")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text("Cart"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
       body: Column(
         children: [
-          /// 🔹 Offer Banner
-          Container(
-            width: double.infinity,
-            color: Colors.greenAccent,
-            padding: const EdgeInsets.all(8),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text("😍", style: TextStyle(fontSize: 28)),
-                    SizedBox(width: 6),
-                    Text("You have saved ₹36!"),
-                  ],
-                ),
-                Text("Shop for ₹25 more to save ₹50 | 20% FLAT"),
-              ],
-            ),
-          ),
-
           Expanded(
             child: cartItems.isEmpty
-                ? const Center(child: Text("Your cart is empty"))
-                : ListView(
+                ?
+                  /// 🔹 Empty Cart UI
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/card_image.gif',
+                          height: 200,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(height: 15),
+                        const Text(
+                          "Your Cart is Empty ",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                :
+                  /// 🔹 Cart Items UI
+                  ListView(
                     children: [
-                      /// 🔹 Cart Items
+                      /// 🔹 Offer Banner (Only Once)
+                      Container(
+                        width: double.infinity,
+                        color: Colors.greenAccent,
+                        padding: const EdgeInsets.all(10),
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text("😍", style: TextStyle(fontSize: 24)),
+                                SizedBox(width: 8),
+                                Text("You have saved ₹36!"),
+                              ],
+                            ),
+                            SizedBox(height: 4),
+                            Text("Shop for ₹25 more to save ₹50 | 20% FLAT"),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+
+                      /// 🔹 Cart Items List
                       ...cartItems.asMap().entries.map((entry) {
                         int index = entry.key;
                         CartItem item = entry.value;
 
                         return Card(
-                          margin: const EdgeInsets.all(8),
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          elevation: 2,
                           child: Padding(
-                            padding: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(10),
                             child: Column(
                               children: [
+                                /// 🔹 Item Row
                                 Row(
                                   children: [
                                     SizedBox(
-                                      width: 20,
-                                      height: 20,
+                                      width: 50,
+                                      height: 50,
                                       child: Image.asset(
                                         item.image ??
-                                            "assets/images/masala.webp",
+                                            'assets/images/defalut_image.png',
+                                        fit: BoxFit.contain,
                                       ),
                                     ),
-                                    const Icon(
-                                      Icons.shopping_cart,
-                                      color: Colors.red,
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        item.name,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    Expanded(child: Text(item.name)),
-                                    Text("₹${item.price * item.quantity}"),
+                                    Text(
+                                      "₹${item.price * item.quantity}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ],
                                 ),
 
                                 const SizedBox(height: 8),
 
-                                /// 🔹 Quantity Controls
+                                /// 🔹 Quantity + Remove
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -168,11 +209,11 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                       ],
                                     ),
-
-                                    /// 🔹 Remove Button
                                     TextButton(
                                       onPressed: () {
-                                        cartItems.removeAt(index);
+                                        setState(() {
+                                          cartItems.removeAt(index);
+                                        });
                                         saveCart();
                                       },
                                       child: const Text(
@@ -188,8 +229,9 @@ class _CartPageState extends State<CartPage> {
                         );
                       }),
 
+                      /// 🔹 Bill Summary
                       const Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(10),
                         child: Text(
                           "Bill Summary",
                           style: TextStyle(
@@ -198,6 +240,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                         ),
                       ),
+
                       const Divider(),
 
                       ListTile(
@@ -223,7 +266,7 @@ class _CartPageState extends State<CartPage> {
                       const Divider(),
 
                       Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(15),
                         child: Row(
                           children: [
                             const Text(
@@ -238,6 +281,7 @@ class _CartPageState extends State<CartPage> {
                               "₹${getFinalAmount()}",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
                           ],

@@ -1,35 +1,49 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-class offerBanner extends StatefulWidget {
-  const offerBanner({super.key});
+class OfferBanner extends StatefulWidget {
+  const OfferBanner({super.key});
+
   @override
-  _offerBannerState createState() => _offerBannerState();
+  State<OfferBanner> createState() => _OfferBannerState();
 }
 
-class _offerBannerState extends State<offerBanner> {
+class _OfferBannerState extends State<OfferBanner> {
   final PageController _controller = PageController();
   int _currentIndex = 0;
+  Timer? _timer;
+
   final List<String> banners = [
     "assets/images/20c81e0c-377d-410d-b152-41bddb7bbf2a.webp",
     "assets/images/restaurant-promotion-background-mexican-food-260nw-2497579947.webp",
-    "assets/images/black-bar-be-cue-food-banner-template-9ffhfd5e8ddb36.webp"
-    
+    "assets/images/black-bar-be-cue-food-banner-template-9ffhfd5e8ddb36.webp",
   ];
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (_currentIndex < banners.length - 1) {
-        _currentIndex++;
-      } else {
-        _currentIndex = 0;
-      }
-      _controller.animateToPage(_currentIndex,
-          duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+    startAutoSlide();
+  }
+
+  void startAutoSlide() {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (!mounted) return;
+
+      _currentIndex = (_currentIndex + 1) % banners.length;
+
+      _controller.animateToPage(
+        _currentIndex,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
     });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();       // 🔥 Stop timer
+    _controller.dispose();  // 🔥 Dispose controller
+    super.dispose();
   }
 
   @override
@@ -59,23 +73,26 @@ class _offerBannerState extends State<offerBanner> {
           ),
         ),
 
-        //Dots Indicator
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 8),
+
         Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-                banners.length,
-                (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: _currentIndex == index ? 10 : 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                          color:
-                              _currentIndex == index ? Colors.red : Colors.grey,
-                          borderRadius: BorderRadius.circular(10)),
-                    )))
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            banners.length,
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: _currentIndex == index ? 12 : 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: _currentIndex == index
+                    ? Colors.red
+                    : Colors.grey,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
