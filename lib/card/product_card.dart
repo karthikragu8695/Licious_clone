@@ -102,7 +102,9 @@ void didUpdateWidget(covariant ProductCard oldWidget) {
       items.add({
         'id': widget.product.id,
         'name': widget.product.name,
+        'image':widget.product.image,
         'price': widget.product.price,
+        'oldprice': widget.product.oldprice,
         'quantity': 1,
       });
       count = 1;

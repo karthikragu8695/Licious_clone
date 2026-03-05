@@ -18,6 +18,7 @@ class CartItem {
   final int id;
   final String name;
   final double price;
+  final double oldprice;
   int quantity;
   final String? image;
 
@@ -25,6 +26,7 @@ class CartItem {
     required this.id,
     required this.name,
     required this.price,
+    required this.oldprice,
     this.quantity = 1,
     required this.image
   });
@@ -34,8 +36,9 @@ class CartItem {
       id: json['id'],
       name: json['name'],
       price: json['price'],
+      oldprice: (json['oldprice'] ?? 0).toDouble(),
       quantity: json['quantity'],
-      image: json['image'] ?? "assets/images/masala.webp",
+      image: json['image'] ?? "assets/images/defalut_image.png",
     );
   }
 

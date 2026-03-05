@@ -4,7 +4,7 @@ import 'package:liciouss/login/Login_Screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
-  AccountScreen({super.key});
+  const AccountScreen({super.key});
 
   @override
   State<AccountScreen> createState() => _AccountScreenState();

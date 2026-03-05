@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:liciouss/models/category_structure.dart';
 import 'package:liciouss/screens/categories_list.dart';
-import 'package:liciouss/screens/home_Screen.dart';
-import 'package:liciouss/screens/home_content.dart';
 
 class SearchScreen extends StatefulWidget {
   final Function(String)? onProductSelected;

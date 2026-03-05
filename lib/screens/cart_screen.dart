@@ -100,7 +100,7 @@ class _CartPageState extends State<CartPage> {
                       children: [
                         Image.asset(
                           'assets/images/card_image.gif',
-                          height: 200,
+                          height: 300,
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(height: 15),
@@ -156,6 +156,27 @@ class _CartPageState extends State<CartPage> {
                             padding: const EdgeInsets.all(10),
                             child: Column(
                               children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "₹${item.oldprice * item.quantity}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Colors.blueGrey,
+                                      ),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      "₹${item.price * item.quantity}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
                                 /// 🔹 Item Row
                                 Row(
                                   children: [
@@ -168,7 +189,9 @@ class _CartPageState extends State<CartPage> {
                                         fit: BoxFit.contain,
                                       ),
                                     ),
+
                                     const SizedBox(width: 10),
+
                                     Expanded(
                                       child: Text(
                                         item.name,
@@ -177,11 +200,64 @@ class _CartPageState extends State<CartPage> {
                                         ),
                                       ),
                                     ),
-                                    Text(
-                                      "₹${item.price * item.quantity}",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                padding: EdgeInsets.zero,
+                                                constraints:
+                                                    const BoxConstraints(),
+                                                onPressed: () =>
+                                                    decreaseQty(index),
+                                                icon: const Icon(
+                                                  Icons.remove,
+                                                  color: Color(0xFF8E0038),
+                                                  size: 15,
+                                                ),
+                                              ),
+                                              Text(
+                                                item.quantity.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                onPressed: () =>
+                                                    increaseQty(index),
+                                                icon: const Icon(
+                                                  Icons.add,
+                                                  color: Color(0xFF8E0038),
+                                                  size: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // TextButton(
+                                        //   onPressed: () {
+                                        //     setState(() {
+                                        //       cartItems.removeAt(index);
+                                        //     });
+                                        //     saveCart();
+                                        //   },
+                                        //   child: const Text(
+                                        //     "Remove",
+                                        //     style: TextStyle(color: Colors.red),
+                                        //   ),
+                                        // ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -189,40 +265,6 @@ class _CartPageState extends State<CartPage> {
                                 const SizedBox(height: 8),
 
                                 /// 🔹 Quantity + Remove
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () => decreaseQty(index),
-                                          icon: const Icon(Icons.remove),
-                                        ),
-                                        Text(
-                                          item.quantity.toString(),
-                                          style: const TextStyle(fontSize: 16),
-                                        ),
-                                        IconButton(
-                                          onPressed: () => increaseQty(index),
-                                          icon: const Icon(Icons.add),
-                                        ),
-                                      ],
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          cartItems.removeAt(index);
-                                        });
-                                        saveCart();
-                                      },
-                                      child: const Text(
-                                        "Remove",
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               ],
                             ),
                           ),
@@ -287,9 +329,130 @@ class _CartPageState extends State<CartPage> {
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Policies",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "-------------------------------------------------------------",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            /// Privacy Policy
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Icon(
+                                  Icons.privacy_tip_outlined,
+                                  size: 20,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    "Your personal details like name, phone number and address "
+                                    "are safe with us and will only be used for order delivery.",
+                                    style: TextStyle(fontSize: 13),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            /// Delivery Policy
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Icon(
+                                  Icons.local_shipping_outlined,
+                                  size: 20,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    "Orders are delivered within the estimated delivery time. "
+                                    "Delivery charges may apply depending on location.",
+                                    style: TextStyle(fontSize: 13),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 10),
+
+                            /// Cancellation Policy
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Icon(
+                                  Icons.cancel_outlined,
+                                  size: 20,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    "Orders can be cancelled before they are packed. "
+                                    "Once packed or shipped, cancellation may not be possible.",
+                                    style: TextStyle(fontSize: 13),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
           ),
+          cartItems.isEmpty
+              ? SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF8E0038),
+                      ),
+                      onPressed: () {},
+                      child: Container(
+                        width: double.infinity,
+
+                        child: Center(
+                          child: Text(
+                            'Add Address',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
         ],
       ),
     );

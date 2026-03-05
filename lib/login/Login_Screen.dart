@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:liciouss/login/otp_Screen.dart';
-import 'package:liciouss/screens/home_content.dart';
 import 'package:liciouss/screens/shimmer_Loding_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
