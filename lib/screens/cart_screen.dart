@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:liciouss/screens/address_page.dart';
+import 'package:liciouss/screens/home_content.dart';
 import '../datas/cart_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,7 +13,15 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  List<String> address = [];
   List<CartItem> cartItems = [];
+
+  Future<void> loadAddress() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      address = prefs.getStringList('address_list') ?? [];
+    });
+  }
 
   int deliveryFee = 39;
   int handlingFee = 5;
@@ -21,6 +31,7 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     loadCartItems();
+    loadAddress();
   }
 
   /// 🔹 Load cart
@@ -153,7 +164,7 @@ class _CartPageState extends State<CartPage> {
                           ),
                           elevation: 2,
                           child: Padding(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(5),
                             child: Column(
                               children: [
                                 Row(
@@ -180,24 +191,45 @@ class _CartPageState extends State<CartPage> {
                                 /// 🔹 Item Row
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      width: 50,
-                                      height: 50,
-                                      child: Image.asset(
-                                        item.image ??
-                                            'assets/images/defalut_image.png',
-                                        fit: BoxFit.contain,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: ClipRect(
+                                        child: Image.asset(
+                                          item.image ??
+                                              'assets/images/defalut_image.png',
+                                          fit: BoxFit.cover,
+                                          width: 60,
+                                          height: 60,
+                                        ),
                                       ),
                                     ),
 
                                     const SizedBox(width: 10),
 
                                     Expanded(
-                                      child: Text(
-                                        item.name,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.name,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            item.weight ?? '',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Row(
@@ -274,27 +306,58 @@ class _CartPageState extends State<CartPage> {
                       /// 🔹 Bill Summary
                       const Padding(
                         padding: EdgeInsets.all(10),
-                        child: Text(
-                          "Bill Summary",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Bill Summary",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              "----------------------------------------------------",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
 
-                      const Divider(),
-
+                      //const Divider(),
                       ListTile(
                         title: const Text("Item total"),
                         trailing: Text("₹${getItemTotal()}"),
                       ),
                       ListTile(
-                        title: const Text("Delivery Fee"),
+                        title: Row(
+                          children: [
+                            const Text("Delivery Fee"),
+                            const SizedBox(width: 5),
+                            Icon(
+                              Icons.privacy_tip_rounded,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
                         trailing: Text("₹$deliveryFee"),
                       ),
                       ListTile(
-                        title: const Text("Handling Fee"),
+                        title: Row(
+                          children: [
+                            const Text("Handling Fee"),
+                            const SizedBox(width: 5),
+                            Icon(
+                              Icons.privacy_tip_rounded,
+                              size: 20,
+                              color: Colors.grey,
+                            ),
+                          ],
+                        ),
                         trailing: Text("₹$handlingFee"),
                       ),
                       ListTile(
@@ -435,13 +498,31 @@ class _CartPageState extends State<CartPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF8E0038),
                       ),
-                      onPressed: () {},
+                      onPressed: ()async{
+                        if(address.isEmpty){
+                          Navigator.push(context,MaterialPageRoute(builder: (context)=>const 
+                            AddressPage()
+                          )).then((_){
+                            loadAddress();
+                          });
+                        }else{
+                          print('Place order');
+                          setState(() {
+                          cartItems.clear();
+                          saveCart();
+                            
+                          });
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen(name: 'guest')));
+                        }
+                      },
                       child: Container(
                         width: double.infinity,
 
                         child: Center(
                           child: Text(
-                            'Add Address',
+                            address.isEmpty
+                                ? 'Add Address'
+                                : "Pay ₹${getFinalAmount()}",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,

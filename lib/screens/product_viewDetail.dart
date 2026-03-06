@@ -68,6 +68,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         'price': widget.product.price,
         'image':widget.product.image,
         'oldprice':widget.product.oldprice,
+        'weight':widget.product.weight,
         'quantity': 1,
       });
       count = 1;

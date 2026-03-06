@@ -104,6 +104,7 @@ void didUpdateWidget(covariant ProductCard oldWidget) {
         'name': widget.product.name,
         'image':widget.product.image,
         'price': widget.product.price,
+        'weight': widget.product.weight,
         'oldprice': widget.product.oldprice,
         'quantity': 1,
       });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:liciouss/DetailScreen/account_edit.dart';
 import 'package:liciouss/login/Login_Screen.dart';
+import 'package:liciouss/screens/address_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -65,7 +66,6 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   const Spacer(),
                   TextButton(
-                    
                     onPressed: () async {
                       await Navigator.push(
                         context,
@@ -81,7 +81,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       style: TextStyle(
                         color: Color(0XFFD32F2F),
                         fontWeight: FontWeight.bold,
-                        fontSize: 16
+                        fontSize: 16,
                       ),
                     ),
                   ),
@@ -138,10 +138,18 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                     const Divider(),
 
-                    const AccountItem(
+                    AccountItem(
                       icon: Icons.location_on_outlined,
                       title: "Address",
                       subtitle: "No Saved Address",
+                      onpressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddressPage(),
+                          ),
+                        );
+                      },
                     ),
                     const Divider(),
 
@@ -175,17 +183,20 @@ class AccountItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final VoidCallback? onpressed;
 
   const AccountItem({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
+     this.onpressed,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onpressed,
       leading: Icon(icon, color: Colors.grey),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 13)),

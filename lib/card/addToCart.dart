@@ -7,6 +7,10 @@ Future<void> addToCart(CartItem item) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setInt('count_$productId', count);
 }
+Future<void> saveAddresses(List<String> addresses) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setStringList('address_list', addresses);
+}
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 List<String>? stringList = prefs.getStringList('cart_counts');
 
