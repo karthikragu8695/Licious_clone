@@ -13,6 +13,7 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  String? selectedAddress;
   List<String> address = [];
   List<CartItem> cartItems = [];
 
@@ -20,7 +21,27 @@ class _CartPageState extends State<CartPage> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       address = prefs.getStringList('address_list') ?? [];
+      if (address.isNotEmpty) {
+        selectedAddress = address[0];
+      }
     });
+  }
+
+  Future<void> saveOrder() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> orders = prefs.getStringList('orders') ?? [];
+    List<Map<String, dynamic>> orderItems = cartItems
+        .map((item) => item.toJson())
+        .toList();
+
+    Map<String, dynamic> orderData = {
+      'address': selectedAddress,
+      'items': orderItems,
+      'total': getFinalAmount(),
+      'date': DateTime.now().toString(),
+    };
+    orders.add(jsonEncode(orderData));
+    await prefs.setStringList('orders', orders);
   }
 
   int deliveryFee = 39;
@@ -109,9 +130,9 @@ class _CartPageState extends State<CartPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'assets/images/card_image.gif',
-                          height: 300,
+                        Image.network(
+                          'https://i.pinimg.com/originals/5a/d0/47/5ad047a18772cf0488a908d98942f9bf.gif',
+                          height: 200,
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(height: 15),
@@ -249,6 +270,7 @@ class _CartPageState extends State<CartPage> {
                                             children: [
                                               IconButton(
                                                 padding: EdgeInsets.zero,
+
                                                 constraints:
                                                     const BoxConstraints(),
                                                 onPressed: () =>
@@ -256,6 +278,7 @@ class _CartPageState extends State<CartPage> {
                                                 icon: const Icon(
                                                   Icons.remove,
                                                   color: Color(0xFF8E0038),
+
                                                   size: 15,
                                                 ),
                                               ),
@@ -315,7 +338,7 @@ class _CartPageState extends State<CartPage> {
                                 fontSize: 16,
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            SizedBox(width: 10),
                             Text(
                               "----------------------------------------------------",
                               style: TextStyle(
@@ -492,45 +515,91 @@ class _CartPageState extends State<CartPage> {
               ? SizedBox()
               : Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF8E0038),
-                      ),
-                      onPressed: ()async{
-                        if(address.isEmpty){
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>const 
-                            AddressPage()
-                          )).then((_){
-                            loadAddress();
-                          });
-                        }else{
-                          print('Place order');
-                          setState(() {
-                          cartItems.clear();
-                          saveCart();
-                            
-                          });
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen(name: 'guest')));
-                        }
-                      },
-                      child: Container(
-                        width: double.infinity,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.location_history),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  selectedAddress ?? "Add Address",
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () async {
+                                  final selected = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddressPage(),
+                                    ),
+                                  );
+                                  if (selected != null) {
+                                    setState(() {
+                                      selectedAddress = selected;
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF8E0038),
+                            ),
+                            onPressed: () async {
+                              if (selectedAddress == null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AddressPage(),
+                                  ),
+                                ).then((_) {
+                                  loadAddress();
+                                });
+                              } else {
+                                saveOrder();
+                                setState(() {
+                                  cartItems.clear();
+                                  saveCart();
+                                });
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        HomeScreen(name: 'guest'),
+                                  ),
+                                );
+                              }
+                            },
+                            child: SizedBox(
+                              width: double.infinity,
 
-                        child: Center(
-                          child: Text(
-                            address.isEmpty
-                                ? 'Add Address'
-                                : "Pay ₹${getFinalAmount()}",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              child: Center(
+                                child: Text(
+                                  address.isEmpty
+                                      ? 'Add Address'
+                                      : "Pay ₹${getFinalAmount()}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),

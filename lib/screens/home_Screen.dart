@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:liciouss/card/product_card.dart';
+import 'package:liciouss/internet/internet_check.dart';
 import 'package:liciouss/screens/cart_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:connectivity_plus/connectivity_plus.dart';
 import '../banners/offer_banner.dart';
 import '../datas/product_data.dart';
 import '../widget/category.dart';
+
 
 class HomeContent extends StatefulWidget {
   final String? searchQuery;
@@ -19,15 +21,12 @@ class HomeContent extends StatefulWidget {
 
 class _HomeContentState extends State<HomeContent> {
   int cartCount = 0;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    calculateCartCount(); // 🔥 Always refresh when screen visible
-  }
+  
 
   @override
   void initState() {
     super.initState();
+    checkInternet();
     calculateCartCount(); // Only this is enough
   }
 
@@ -51,7 +50,28 @@ class _HomeContentState extends State<HomeContent> {
       });
     }
   }
+Future<void> checkInternet() async {
+  final result = await Connectivity().checkConnectivity();
 
+  if (result.contains(ConnectivityResult.mobile) ||
+      result.contains(ConnectivityResult.wifi)) {
+
+    print("Internet Available");
+
+  } else {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => NoInternetScreen()),
+    );
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("No Internet Connection"),
+      ),
+    );
+
+  }
+}
   /// 🔹 Calculate total cart count from SharedPreferences
   Future<void> calculateCartCount() async {
     final prefs = await SharedPreferences.getInstance();

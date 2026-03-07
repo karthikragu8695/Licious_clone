@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:liciouss/DetailScreen/account_edit.dart';
 import 'package:liciouss/login/Login_Screen.dart';
 import 'package:liciouss/screens/address_page.dart';
+import 'package:liciouss/screens/order_histroy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -12,13 +13,23 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  int cartCount = 0 ;
   String name = '';
   String phone = "";
 
   @override
   void initState() {
     super.initState();
+    loadOrders();
     loadUser();
+  }
+  Future<void>loadOrders ()async{
+    final prefs = await SharedPreferences.getInstance();
+    List<String>orders = prefs.getStringList('orders')??[];
+    setState(() {
+      cartCount = orders.length;
+    });
+    
   }
 
   Future<void> loadUser() async {
@@ -124,10 +135,19 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: ListView(
                   children: [
                     const Divider(),
-                    const AccountItem(
+                     AccountItem(
                       icon: Icons.shopping_bag_outlined,
                       title: "Orders",
-                      subtitle: "Order Placed : 0",
+                      subtitle: "Order Placed : $cartCount",
+                      onpressed: () async{
+                      await  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>  OrderHistoryPage(),
+                          ),
+                        );
+                        loadOrders();
+                      },
                     ),
                     const Divider(),
 
@@ -190,7 +210,7 @@ class AccountItem extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.subtitle,
-     this.onpressed,
+    this.onpressed,
   });
 
   @override

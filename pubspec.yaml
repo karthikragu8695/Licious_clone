@@ -16,6 +16,7 @@ dependencies:
   shared_preferences: ^2.5.4
   image_picker: ^1.2.1
   shimmer: ^3.0.0
+  connectivity_plus: ^7.0.0
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,8 @@ flutter:
     - assets/images/licious_icon.jpg
     - assets/images/card_image.gif
     - assets/images/defalut_image.png
+    - assets/images/5ad047a18772cf0488a908d98942f9bf.gif
+    - assets/images/original-8b1e03333efb9d4698ab615041fe19ec.gif
     - assets/images/Licious.jpg
     - assets/images/pngtree-food-logo-png-image_5687686.png
     - assets/images/Logo.jpg

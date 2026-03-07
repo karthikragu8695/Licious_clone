@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressFormScreen extends StatefulWidget {
   final String? existingAddress;
@@ -55,7 +54,7 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
             buildTextField(
               "Phone Number",
               phoneController,
-              TextInputType.phone,
+              TextInputType.number,
             ),
             buildTextField(
               "House / Flat No",
@@ -98,12 +97,13 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
             },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: Color(0xFF8E0038)
+              backgroundColor: Color(0xFF8E0038),
             ),
             child: Text(
               widget.existingAddress == null
                   ? "Save Address"
-                  : "Update Address",style: TextStyle(color: Colors.white),
+                  : "Update Address",
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ),
@@ -120,6 +120,8 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
       padding: const EdgeInsets.only(bottom: 14),
       child: TextField(
         controller: controller,
+        keyboardType: keyboardType,
+
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
