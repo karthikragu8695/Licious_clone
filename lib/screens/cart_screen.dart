@@ -29,7 +29,7 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> saveOrder() async {
     final prefs = await SharedPreferences.getInstance();
-    List<String> orders = prefs.getStringList('orders') ?? [];
+    List<String> orderList = prefs.getStringList('orders') ?? [];
     List<Map<String, dynamic>> orderItems = cartItems
         .map((item) => item.toJson())
         .toList();
@@ -40,8 +40,9 @@ class _CartPageState extends State<CartPage> {
       'total': getFinalAmount(),
       'date': DateTime.now().toString(),
     };
-    orders.add(jsonEncode(orderData));
-    await prefs.setStringList('orders', orders);
+    orderList.add(jsonEncode(orderData));
+    await prefs.setStringList('orders', orderList);
+    print("Cart Items Length: ${cartItems.length}");
   }
 
   int deliveryFee = 39;
@@ -567,7 +568,7 @@ class _CartPageState extends State<CartPage> {
                                   loadAddress();
                                 });
                               } else {
-                                saveOrder();
+                                await saveOrder();
                                 setState(() {
                                   cartItems.clear();
                                   saveCart();
