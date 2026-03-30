@@ -4,10 +4,10 @@ class Product {
   final String image;
   final String weight;
   final String pieces;
-  final double price;
-  final double oldprice;
+  final int price;
+  final int oldprice;
   final int discount;
-  final String category;
+  final int category;
   final int deliveryMinutes;
   final bool isBestSeller;
 
@@ -24,4 +24,19 @@ class Product {
     required this.deliveryMinutes,
     required this.isBestSeller,
   });
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      image: json['image'] ?? '',
+      weight: json['weight'] ?? '',
+      pieces: json['pieces'] ?? '',
+      price: json['price'] ?? 0,
+      oldprice: json['oldprice'] ?? 0,
+      discount:json['discount'] ?? 0,
+     category:json['category'] ?? 0,
+      deliveryMinutes:json['deliveryMinutes'] ?? 0,
+      isBestSeller:json['isBestSeller'] ?? false
+    );
+  }
 }

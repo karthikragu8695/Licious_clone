@@ -131,11 +131,11 @@ class _CartPageState extends State<CartPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.network(
-                          'https://i.pinimg.com/originals/5a/d0/47/5ad047a18772cf0488a908d98942f9bf.gif',
-                          height: 200,
-                          fit: BoxFit.contain,
-                        ),
+                        // Image.asset(
+                        //   'https://i.pinimg.com/originals/5a/d0/47/5ad047a18772cf0488a908d98942f9bf.gif',
+                        //   height: 200,
+                        //   fit: BoxFit.contain,
+                        // ),
                         const SizedBox(height: 15),
                         const Text(
                           "Your Cart is Empty ",

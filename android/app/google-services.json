@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "200329176172",
+    "project_id": "phonic-presence-443508-e4",
+    "storage_bucket": "phonic-presence-443508-e4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200329176172:android:c3eb58800a8f8e4c0b2449",
+        "android_client_info": {
+          "package_name": "com.example.liciouss"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBpQAjTcJYRbjnjtvIlH22sO0jTkjTWX8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

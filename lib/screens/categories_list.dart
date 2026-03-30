@@ -48,7 +48,7 @@ class _CategoriesListState extends State<CategoriesList> {
     
     final filteredProducts = productList
     .where((p) =>
-        p.category.toLowerCase().trim() ==
+        p.category.toString().toLowerCase().trim() ==
         widget.categoryKey.toLowerCase().trim())
     .toList();
 
@@ -63,7 +63,14 @@ class _CategoriesListState extends State<CategoriesList> {
       appBar: AppBar(title: Text(widget.title)),
       body: filteredProducts.isEmpty
           ? const Center(
-              child: Text("No products found", style: TextStyle(fontSize: 16)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image(image: AssetImage('assets/images/noordersYet.webp')),
+                  SizedBox(height: 20,),
+                  Text("No products found", style: TextStyle(fontSize: 16)),
+                ],
+              ),
             )
           : GridView.builder(
               padding: const EdgeInsets.all(12),

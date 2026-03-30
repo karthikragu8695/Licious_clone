@@ -49,7 +49,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
     String formattedDate = DateFormat('dd MMM yyyy').format(DateTime.now());
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-
+      //Colors.grey.shade100
       appBar: AppBar(
         title: const Text("My Orders"),
         actions: [
@@ -61,8 +61,20 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       ),
 
       body: orders.isEmpty
-          ? const Center(
-              child: Text("No Orders Yet", style: TextStyle(fontSize: 18)),
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Center(
+                  child: Image(
+                    image: AssetImage('assets/images/noordersYet.webp'),
+                  ),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  'No orders',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ],
             )
           : ListView.builder(
               padding: const EdgeInsets.all(14),
@@ -223,7 +235,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                               ],
                             ),
                           );
-                        }).toList(),
+                        }),
 
                         const Divider(height: 20),
 

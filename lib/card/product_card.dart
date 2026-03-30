@@ -43,11 +43,12 @@ class _ProductCardState extends State<ProductCard> {
 
   //   print("🛒 product Cart Count: $count");
   // }
-@override
-void didUpdateWidget(covariant ProductCard oldWidget) {
-  super.didUpdateWidget(oldWidget);
-  loadCount(); // 🔥 Refresh when parent rebuilds
-}
+  @override
+  void didUpdateWidget(covariant ProductCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    loadCount(); // 🔥 Refresh when parent rebuilds
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,7 +103,7 @@ void didUpdateWidget(covariant ProductCard oldWidget) {
       items.add({
         'id': widget.product.id,
         'name': widget.product.name,
-        'image':widget.product.image,
+        'image': widget.product.image,
         'price': widget.product.price,
         'weight': widget.product.weight,
         'oldprice': widget.product.oldprice,
@@ -182,12 +183,16 @@ void didUpdateWidget(covariant ProductCard oldWidget) {
                     top: Radius.circular(12),
                   ),
                   child: Image.asset(
-                    widget.product.image,
+                    widget.product.image ?? "",
                     height: 120,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.image_not_supported);
+                    },
                   ),
                 ),
+
                 Positioned(
                   right: 8,
                   top: 8,

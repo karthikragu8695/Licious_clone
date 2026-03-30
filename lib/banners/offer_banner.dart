@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OfferBanner extends StatefulWidget {
   const OfferBanner({super.key});
@@ -10,22 +11,58 @@ class OfferBanner extends StatefulWidget {
 
 class _OfferBannerState extends State<OfferBanner> {
   final PageController _controller = PageController();
+  final supabase = Supabase.instance.client;
+
   int _currentIndex = 0;
   Timer? _timer;
 
-  final List<String> banners = [
-    "assets/images/20c81e0c-377d-410d-b152-41bddb7bbf2a.webp",
-    "assets/images/restaurant-promotion-background-mexican-food-260nw-2497579947.webp",
-    "assets/images/black-bar-be-cue-food-banner-template-9ffhfd5e8ddb36.webp",
-  ];
+  List<String> banners = [];
 
   @override
   void initState() {
     super.initState();
-    startAutoSlide();
+    fetchBanners();
   }
 
+  // 🔥 Fetch banners from Supabase
+  Future<void> fetchBanners() async {
+    try {
+      final response = await supabase
+          .from('banner') // ✅ correct table name
+          .select();
+
+      print("Supabase Data: $response");
+
+      if (response.isNotEmpty) {
+        List<String> temp = [];
+
+        for (var item in response) {
+          final url = item['images'];
+
+          if (url != null && url.toString().startsWith('http')) {
+            temp.add(url);
+          } else {
+            print("❌ Invalid URL: $url");
+          }
+        }
+
+        setState(() {
+          banners = temp;
+        });
+
+        startAutoSlide();
+      } else {
+        print("❌ No data found");
+      }
+    } catch (e) {
+      print("🔥 Error fetching banners: $e");
+    }
+  }
+
+  // 🔥 Auto slide
   void startAutoSlide() {
+    if (banners.isEmpty) return;
+
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (!mounted) return;
 
@@ -41,13 +78,21 @@ class _OfferBannerState extends State<OfferBanner> {
 
   @override
   void dispose() {
-    _timer?.cancel();       // 🔥 Stop timer
-    _controller.dispose();  // 🔥 Dispose controller
+    _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // 🔥 Loading state
+    if (banners.isEmpty) {
+      return const SizedBox(
+        height: 160,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -63,9 +108,24 @@ class _OfferBannerState extends State<OfferBanner> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
+                  child: Image.network(
                     banners[index],
                     fit: BoxFit.cover,
+
+                    // 🔥 loading indicator
+                    loadingBuilder: (context, child, progress) {
+                      if (progress == null) return child;
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+
+                    // 🔥 error handling
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(
+                        child: Text("Image load error"),
+                      );
+                    },
                   ),
                 ),
               );
@@ -75,6 +135,7 @@ class _OfferBannerState extends State<OfferBanner> {
 
         const SizedBox(height: 8),
 
+        // 🔥 Indicator dots
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(

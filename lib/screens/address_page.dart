@@ -39,36 +39,52 @@ class _AddressPageState extends State<AddressPage> {
         children: [
           /// Address List
           Expanded(
-            child: ListView.builder(
-              itemCount: address.length,
-              itemBuilder: (context, index) {
-                return AddressCard(
-                  address: address[index],
-                  onEdit: () async {
-                    final updatedAddress = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AddressFormScreen(existingAddress: address[index]),
+            child: address.isEmpty
+                ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Image(
+                      
+                        image: AssetImage(
+                          'assets/images/no-saved-address-illustration-svg-download-png-9741058.webp',
+                        ),
+                      height: 300,
+                        
                       ),
-                    );
+                      Text('No Address Yet',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22),)
+                  ],
+                )
+                : ListView.builder(
+                    itemCount: address.length,
+                    itemBuilder: (context, index) {
+                      return AddressCard(
+                        address: address[index],
+                        onEdit: () async {
+                          final updatedAddress = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddressFormScreen(
+                                existingAddress: address[index],
+                              ),
+                            ),
+                          );
 
-                    if (updatedAddress != null) {
-                      setState(() {
-                        address[index] = updatedAddress;
-                      });
-                      saveAddresses();
-                    }
-                  }, // address pass pannunga
-                  onDelete: () {
-                    setState(() {
-                      address.removeAt(index);
-                      saveAddresses();
-                    });
-                  },
-                );
-              },
-            ),
+                          if (updatedAddress != null) {
+                            setState(() {
+                              address[index] = updatedAddress;
+                            });
+                            saveAddresses();
+                          }
+                        }, // address pass pannunga
+                        onDelete: () {
+                          setState(() {
+                            address.removeAt(index);
+                            saveAddresses();
+                          });
+                        },
+                      );
+                    },
+                  ),
           ),
           // if (address.isEmpty)
           // ElevatedButton(

@@ -3,6 +3,8 @@ import 'package:liciouss/DetailScreen/account_edit.dart';
 import 'package:liciouss/login/Login_Screen.dart';
 import 'package:liciouss/screens/address_page.dart';
 import 'package:liciouss/screens/order_histroy.dart';
+import 'package:liciouss/screens/payment_page.dart';
+import 'package:liciouss/screens/termsCondition_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -151,22 +153,44 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                     const Divider(),
 
-                    const AccountItem(
+                     AccountItem(
                       icon: Icons.credit_card_outlined,
                       title: "Payment Methods",
                       subtitle: "Saved cards & UPI IDs",
+                      onpressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PaymentPage(),
+                          ),
+                        );
+                      },
                     ),
                     const Divider(),
 
                     AccountItem(
                       icon: Icons.location_on_outlined,
                       title: "Address",
-                      subtitle: "No Saved Address",
+                      subtitle: "Manage delivery addresses",
                       onpressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const AddressPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    const Divider(),
+                    AccountItem(
+                      icon: Icons.location_on_outlined,
+                      title: "Terms & condition",
+                      subtitle: "Read our terms and policies",
+                      onpressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TermsConditionsPage(),
                           ),
                         );
                       },
