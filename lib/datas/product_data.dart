@@ -48,7 +48,7 @@ List<Product> productList = [
     price: 260,
     oldprice: 326,
     discount: 13,
-    category: 1,
+    category: 3,
     deliveryMinutes: 90,
     isBestSeller: true,
   ),

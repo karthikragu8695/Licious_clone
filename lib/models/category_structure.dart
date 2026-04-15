@@ -7,10 +7,10 @@ class Category {
 }
 
 List<Category> categories = [
-  Category(title: 'Chicken', image: 'assets/images/CHICKEN1.jpg',key: "Chicken",product: 'Chicken'),
-  Category(title: 'Mutton', image: 'assets/images/muttonCate.png',key: "Mutton",product: 'Mutton'),
-  Category(title: 'SeaWaterFish', image: 'assets/images/seawaterfish.png',key: "SeaWaterFish",product: 'SeaWaterFish'),
-  Category(title: 'Freshwater Fish', image: 'assets/images/FISH.jpg',key: "Freshwater Fish",product: 'Freshwater Fish'),
+  Category(title: 'Chicken', image: 'assets/images/CHICKEN1.jpg',key: "1",product: 'Chicken'),
+  Category(title: 'Mutton', image: 'assets/images/muttonCate.png',key: "2   ",product: 'Mutton'),
+  Category(title: 'SeaWaterFish', image: 'assets/images/seawaterfish.png',key: "3",product: 'SeaWaterFish'),
+  Category(title: 'Freshwater Fish', image: 'assets/images/FISH.jpg',key: "4",product: 'Freshwater Fish'),
   Category(title: 'Eggs', image: 'assets/images/eggscate.webp',key: "Eggs",product: 'Eggs'),
   Category(title: 'Crispies & Wings', image: 'assets/images/crispy.png',key: "Crispies & Wings",product: 'Crispies & Wings'),
   Category(title: 'Ready to cook', image: 'assets/images/readytocook.png',key: "Ready to cook",product: 'Ready to cook'),

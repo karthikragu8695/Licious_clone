@@ -26,6 +26,7 @@ class _CategoriesListState extends State<CategoriesList> {
     super.initState();
     calculateCartCount(); // Only this is enough
   }
+
   Future<void> calculateCartCount() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> cartList = prefs.getStringList('cart') ?? [];
@@ -43,14 +44,18 @@ class _CategoriesListState extends State<CategoriesList> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    
-    final filteredProducts = productList
-    .where((p) =>
-        p.category.toString().toLowerCase().trim() ==
-        widget.categoryKey.toLowerCase().trim())
-    .toList();
+   final categoryId = int.tryParse(widget.categoryKey);
+
+final filteredProducts = productList.where((p) {
+  if (categoryId != null) {
+    return p.category == categoryId;
+  } else {
+    return p.category.toString() == widget.categoryKey;
+  }
+}).toList();
 
     print("📦 Products found: ${filteredProducts.length}");
     print("Category Key received: ${widget.categoryKey}");
@@ -67,7 +72,7 @@ class _CategoriesListState extends State<CategoriesList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image(image: AssetImage('assets/images/noordersYet.webp')),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20),
                   Text("No products found", style: TextStyle(fontSize: 16)),
                 ],
               ),

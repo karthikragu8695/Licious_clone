@@ -17,7 +17,7 @@ Future<void> saveCount(String productId, int count) async {
 class CartItem {
   final int id;
   final String name;
-  final double price;
+  final int price;
   final double oldprice;
   int quantity;
   final String? image;
