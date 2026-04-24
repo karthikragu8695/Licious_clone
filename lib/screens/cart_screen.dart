@@ -570,10 +570,56 @@ class _CartPageState extends State<CartPage> {
                                 });
                               } else {
                                 await saveOrder();
+
                                 setState(() {
                                   cartItems.clear();
                                   saveCart();
                                 });
+
+                                // 👉 Show BottomSheet
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // user close panna mudiyadhu
+                                  builder: (context) {
+                                    return Dialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Container(
+                                        height: 220,
+                                        padding: EdgeInsets.all(20),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.asset(
+                                              'assets/images/ezgif.com-crop.gif',
+                                              height: 80,
+                                            ),
+                                            SizedBox(height: 15),
+                                            Text(
+                                              "Order Placed Successfully",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+
+                                // ⏳ wait
+                                await Future.delayed(Duration(seconds: 3));
+
+                                // 👉 Close BottomSheet first
+                                Navigator.pop(context);
+
+                                // 👉 Then navigate
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
