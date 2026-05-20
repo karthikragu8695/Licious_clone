@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:liciouss/card/product_card.dart';
 import 'package:liciouss/internet/internet_check.dart';
+import 'package:liciouss/models/product_structure.dart';
 import 'package:liciouss/screens/cart_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../banners/offer_banner.dart';
 import '../datas/product_data.dart';
 import '../widget/category.dart';
@@ -19,17 +21,30 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
+  List<dynamic> filtereddProductList = [];
   int cartCount = 0;
 
   @override
   void initState() {
     super.initState();
     checkInternet();
+    fetchProducts();
     calculateCartCount(); // Only this is enough
   }
+  Future<void> fetchProducts() async {
+  final response = await Supabase.instance.client
+      .from('products')
+      .select();
 
-  String selectedLocation = "Coimbatore";
-  String deliveryTime = "⚡ Delivery in 90 mins";
+  setState(() {
+    filtereddProductList = response
+        .map<Product>((json) => Product.fromJson(json))
+        .toList();
+  });
+}
+
+  String selectedLocation = "Trichy";
+  String deliveryTime = "⚡ Delivery in 30 mins";
 
   Future<void> clearCart() async {
     final prefs = await SharedPreferences.getInstance();
@@ -87,19 +102,7 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   /// 🔹 Update delivery time
-  void updateDeliveryInfo(String location) {
-    setState(() {
-      selectedLocation = location;
-
-      if (location == "Chennai") {
-        deliveryTime = "⚡ Delivery in 120 mins";
-      } else if (location == "Bangalore") {
-        deliveryTime = "⚡ Delivery in 100 mins";
-      } else {
-        deliveryTime = "⚡ Delivery in 90 mins";
-      }
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -124,57 +127,56 @@ class _HomeContentState extends State<HomeContent> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        String? location = await showDialog<String>(
-                          context: context,
-                          builder: (context) => SimpleDialog(
-                            title: const Text("Select Location"),
-                            children: [
-                              SimpleDialogOption(
-                                onPressed: () =>
-                                    Navigator.pop(context, "Coimbatore"),
-                                child: const Text("Coimbatore"),
-                              ),
-                              SimpleDialogOption(
-                                onPressed: () =>
-                                    Navigator.pop(context, "Chennai"),
-                                child: const Text("Chennai"),
-                              ),
-                              SimpleDialogOption(
-                                onPressed: () =>
-                                    Navigator.pop(context, "Bangalore"),
-                                child: const Text("Bangalore"),
-                              ),
-                            ],
-                          ),
-                        );
+                    // GestureDetector(
+                    //   onTap: () async {
+                    //     String? location = await showDialog<String>(
+                    //       context: context,
+                    //       builder: (context) => SimpleDialog(
+                    //         title: const Text("Select Location"),
+                    //         children: [
+                    //           SimpleDialogOption(
+                    //             onPressed: () =>
+                    //                 Navigator.pop(context, "Coimbatore"),
+                    //             child: const Text("Coimbatore"),
+                    //           ),
+                    //           SimpleDialogOption(
+                    //             onPressed: () =>
+                    //                 Navigator.pop(context, "Chennai"),
+                    //             child: const Text("Chennai"),
+                    //           ),
+                    //           SimpleDialogOption(
+                    //             onPressed: () =>
+                    //                 Navigator.pop(context, "Bangalore"),
+                    //             child: const Text("Bangalore"),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     );
 
-                        if (location != null) {
-                          updateDeliveryInfo(location);
-                        }
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                selectedLocation,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                          Text(
-                            "$selectedLocation International",
-                            style: const TextStyle(fontSize: 12),
-                          ),
-                        ],
-                      ),
-                    ),
+                        
+                    //   },
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           Text(
+                    //             selectedLocation,
+                    //             style: const TextStyle(
+                    //               fontWeight: FontWeight.bold,
+                    //             ),
+                    //           ),
+                    //           const Icon(Icons.arrow_drop_down),
+                    //         ],
+                    //       ),
+                    //       Text(
+                    //         "$selectedLocation International",
+                    //         style: const TextStyle(fontSize: 12),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    Text(selectedLocation, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     Text(deliveryTime, style: const TextStyle(fontSize: 12)),
                     // ElevatedButton(
                     //   onPressed: didChangeDependencies,
@@ -213,9 +215,9 @@ class _HomeContentState extends State<HomeContent> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemCount: filteredProductList.length,
+                  itemCount: filtereddProductList.length,
                   itemBuilder: (context, index) {
-                    final product = filteredProductList[index];
+                    final product = filtereddProductList[index];
 
                     return Padding(
                       padding: const EdgeInsets.only(right: 12),

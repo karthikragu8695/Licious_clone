@@ -143,7 +143,9 @@ class _ProductCardState extends State<ProductCard> {
 
     await prefs.setStringList('cart', items.map((e) => jsonEncode(e)).toList());
 
-    setState(() {});
+    setState(() {
+      count = count;
+    });
     widget.onCountChange?.call(count);
   }
 
@@ -182,13 +184,32 @@ class _ProductCardState extends State<ProductCard> {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: Image.asset(
-                    widget.product.image ?? "",
+                  child: Image.network(
+                    widget.product.image,
                     height: 120,
                     width: double.infinity,
                     fit: BoxFit.cover,
+
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+
+                      return Container(
+                        height: 120,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        child: const CircularProgressIndicator(),
+                      );
+                    },
+
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.image_not_supported);
+                      return Container(
+                        height: 120,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.image_not_supported),
+                      );
                     },
                   ),
                 ),
@@ -301,7 +322,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       const SizedBox(width: 14),
                       Text(
-                        '${widget.product.discount}%',
+                        '${widget.product.discount}% OFF',
                         style: const TextStyle(
                           color: Color(0xff050505),
                           fontWeight: FontWeight.w600,

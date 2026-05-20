@@ -66,9 +66,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         'id': widget.product.id,
         'name': widget.product.name,
         'price': widget.product.price,
-        'image':widget.product.image,
-        'oldprice':widget.product.oldprice,
-        'weight':widget.product.weight,
+        'image': widget.product.image,
+        'oldprice': widget.product.oldprice,
+        'weight': widget.product.weight,
         'quantity': 1,
       });
       count = 1;
@@ -76,7 +76,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
     await prefs.setStringList('cart', items.map((e) => jsonEncode(e)).toList());
 
-    setState(() {});
+    setState(() {
+  count = count;
+});
     widget.onCountChange?.call(count);
   }
 
@@ -134,11 +136,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       ),
       body: Column(
         children: [
-          Image.asset(
+          Image.network(
             widget.product.image,
             height: 260,
             width: double.infinity,
             fit: BoxFit.cover,
+
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+
+              return const SizedBox(
+                height: 260,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            },
+
+            errorBuilder: (context, error, stackTrace) {
+              return const SizedBox(
+                height: 260,
+                child: Center(child: Icon(Icons.image_not_supported, size: 40)),
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(16),

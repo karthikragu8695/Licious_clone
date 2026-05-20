@@ -219,12 +219,21 @@ class _CartPageState extends State<CartPage> {
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: ClipRect(
-                                        child: Image.asset(
+                                        child: Image.network(
                                           item.image ??
                                               'assets/images/defalut_image.png',
                                           fit: BoxFit.cover,
                                           width: 60,
                                           height: 60,
+                                          errorBuilder: (context,Error,StackTrace){
+                                            return Image.asset(
+                                              'assets/images/defalut_image.png',
+
+                                              fit: BoxFit.cover,
+                                          width: 60,
+                                          height: 60,
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
