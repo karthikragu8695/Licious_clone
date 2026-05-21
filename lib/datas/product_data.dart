@@ -16,7 +16,7 @@ List<Product> productList = [
   Product(
     id: 1,
     name: 'chicken',
-    image: 'assets/images/CHICKEN1.jpg',
+    image: 'https://xhzwuqmfwikwirxrhkcq.supabase.co/storage/v1/object/public/product/product/CHICKEN1.jpg',
     weight: '500 g',
     pieces: '12 - 18 pieces',
     price: 165,
@@ -29,7 +29,7 @@ List<Product> productList = [
   Product(
     id: 2,
     name: 'Mutton',
-    image: 'assets/images/MUTTON.jpg',
+    image: 'https://xhzwuqmfwikwirxrhkcq.supabase.co/storage/v1/object/public/product/product/MUTTON.jpg',
     weight: '250 g',
     pieces: '20 - 25 pieces',
     price: 194,

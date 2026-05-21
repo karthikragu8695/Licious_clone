@@ -190,18 +190,18 @@ class _ProductCardState extends State<ProductCard> {
                     width: double.infinity,
                     fit: BoxFit.cover,
 
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
+                    // loadingBuilder: (context, child, loadingProgress) {
+                    //   if (loadingProgress == null) {
+                    //     return child;
+                    //   }
 
-                      return Container(
-                        height: 120,
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        child: const CircularProgressIndicator(),
-                      );
-                    },
+                    //   return Container(
+                    //     height: 120,
+                    //     width: double.infinity,
+                    //     alignment: Alignment.center,
+                    //     child: const CircularProgressIndicator(),
+                    //   );
+                    // },
 
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
